@@ -4,6 +4,8 @@ import Vuex, { MutationTree, ActionTree, GetterTree } from 'vuex';
 import axios from 'axios';
 import { Pokemon } from '@/types';
 
+import { mapPokemonApiResponseToPokemon } from "@/pokemonUtils";
+
 Vue.use(Vuex);
 
 interface RootState {
@@ -39,15 +41,7 @@ const actions: ActionTree<RootState, RootState> = {
       const pokemons: Pokemon[] = await Promise.all(
         pokemonData.map(async (pokemon) => {
           const res = await axios.get(pokemon.url);
-          return {
-            name: pokemon.name,
-            types: res.data.types.map((type: { type: { name: string } }) => type.type.name),
-            url: pokemon.url,
-            height: res.data.height,
-            weight: res.data.weight,
-            base_experience: res.data.base_experience,
-            sprites: res.data.sprites,
-          };
+          return mapPokemonApiResponseToPokemon(res.data);
         })
       );
       commit('setPokemons', pokemons);

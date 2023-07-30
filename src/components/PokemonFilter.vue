@@ -52,7 +52,7 @@ export default Vue.extend({
     };
   },
   methods: {
-    ...mapActions(["filterPokemons"]),
+    ...mapActions(['filterPokemons']),
     filterType(type: string | null) {
       this.filterPokemons(type);
     },

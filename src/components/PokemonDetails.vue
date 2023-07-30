@@ -33,6 +33,7 @@
 <script lang="ts">
 import { Pokemon } from "@/types";
 import { defineComponent } from "vue";
+import { mapPokemonApiResponseToPokemon } from "@/pokemonUtils";
 
 export default defineComponent({
   name: "PokemonDetails",
@@ -54,22 +55,10 @@ export default defineComponent({
     async fetchPokemonDetails() {
       try {
         const name = this.$route.params.name;
-        // Fetch the details of the selected Pokemon using the name from the API
-        const response = await fetch(
-          `https://pokeapi.co/api/v2/pokemon/${name}`
-        );
+        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
         const data = await response.json();
 
-        // Map the received data to match the Pokemon interface
-        this.pokemonDetails = {
-          name: data.name,
-          weight: data.weight,
-          height: data.height,
-          base_experience: data.base_experience,
-          url: data.url,
-          types: data.types.map((type: any) => type.type.name),
-          sprites: data.sprites,
-        };
+        this.pokemonDetails = mapPokemonApiResponseToPokemon(data);
       } catch (error) {
         console.error("Error fetching Pokemon details:", error);
       }

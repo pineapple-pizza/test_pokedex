@@ -64,7 +64,7 @@ export default {
     PokemonFilter,
   },
   computed: {
-    ...mapGetters(['filteredPokemons']),
+    ...mapGetters(['filteredPokemons', 'selectedType']),
     selectedType: {
       get(): string | null {
         return store.state.selectedType;
