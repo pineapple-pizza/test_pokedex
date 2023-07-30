@@ -1,5 +1,9 @@
 import { Pokemon } from "@/types";
 
+/**
+ * Function to map Pokemon API response data to a Pokemon object
+ * Return a new Pokemon object with properties mapped from the API response data
+ */
 export function mapPokemonApiResponseToPokemon(data: any): Pokemon {
   return {
     name: data.name,

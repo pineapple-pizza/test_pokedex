@@ -1,3 +1,6 @@
+/**
+ * Define the Pokemon interface, which represents the structure of a Pokemon object
+ */
 export interface Pokemon {
     name: string;
     url: string;
@@ -8,6 +11,9 @@ export interface Pokemon {
     sprites: PokemonSprites;
 }
 
+/**
+ * Interface representing the sprites of a Pokemon
+ */
 interface PokemonSprites {
     front_default: string | null;
 }

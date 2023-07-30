@@ -1,17 +1,16 @@
 <template>
-  <div class="home">
-    <Home/>
+  <div>
+    <PokemonList />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import Home from '../components/AllPokemons.vue';
+import PokemonList from "@/components/PokemonList.vue";
 
-@Component({
+export default {
+  name: "HomeView",
   components: {
-    Home,
+    PokemonList,
   },
-})
-export default class HomeView extends Vue {}
+};
 </script>

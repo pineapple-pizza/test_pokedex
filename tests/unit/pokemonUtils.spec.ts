@@ -1,6 +1,12 @@
 import { mapPokemonApiResponseToPokemon } from "@/pokemonUtils";
 
+/**
+ * Describe block for the 'mapPokemonApiResponseToPokemon' function
+ */
 describe("mapPokemonApiResponseToPokemon", () => {
+  /**
+   * Test case for mapping Pokemon API response to Pokemon object correctly
+   */
   it("should map Pokemon API response to Pokemon object correctly", () => {
     const apiResponse = {
       name: "bulbasaur",
@@ -15,6 +21,9 @@ describe("mapPokemonApiResponseToPokemon", () => {
       sprites: { front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png" },
     };
 
+    /**
+     * Expected result after mapping the API response to Pokemon object
+     */
     const expectedResult = {
       name: "bulbasaur",
       weight: 69,
@@ -25,6 +34,10 @@ describe("mapPokemonApiResponseToPokemon", () => {
       sprites: { front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png" },
     };
 
+    /**
+     * Call the function to be tested with the sample API response
+     * Use 'expect' function to check if the result matches the expected result
+     */
     const result = mapPokemonApiResponseToPokemon(apiResponse);
     expect(result).toEqual(expectedResult);
   });
