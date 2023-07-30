@@ -27,17 +27,6 @@
         <v-btn text :to="{ path: '/' }"> Go Back </v-btn>
       </v-card-actions>
     </v-card>
-    <!-- <h2>{{ pokemonDetails?.name }}</h2> -->
-    <!-- <img
-      :src="getImageUrl(pokemonDetails?.sprites.front_default)"
-      alt="Pokemon Image"
-    /> -->
-
-    <!-- <div v-if="pokemonDetails">
-      <p>Weight: {{ pokemonDetails.weight }}</p>
-      <p>Height: {{ pokemonDetails.height }}</p>
-      <p>Base Experience: {{ pokemonDetails.base_experience }}</p>
-    </div> -->
   </v-container>
 </template>
 

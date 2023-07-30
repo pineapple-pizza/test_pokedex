@@ -10,6 +10,9 @@
           hide-details
         ></v-text-field>
       </v-card-title>
+
+      <PokemonFilter />
+
       <v-data-table
         :items="filteredPokemons"
         :search="search"
@@ -30,9 +33,6 @@
         </template>
       </v-data-table>
     </v-card>
-
-    <PokemonSearch />
-    <PokemonFilter />
   </v-container>
 </template>
 
@@ -40,7 +40,6 @@
 import { mapGetters, mapActions } from "vuex";
 import store from "@/store";
 import PokemonFilter from "./PokemonFilter.vue";
-import PokemonSearch from "./PokemonSearch.vue";
 
 export default {
   name: "PokemonList",
@@ -58,10 +57,17 @@ export default {
   },
   components: {
     PokemonFilter,
-    PokemonSearch,
   },
   computed: {
-    ...mapGetters(["filteredPokemons"]),
+    ...mapGetters(['filteredPokemons']),
+    selectedType: {
+      get(): string | null {
+        return store.state.selectedType;
+      },
+      set(value: string | null) {
+        store.dispatch('filterPokemons', value);
+      },
+    },
   },
   created() {
     store.dispatch("fetchPokemons");

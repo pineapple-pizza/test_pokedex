@@ -1,61 +1,81 @@
-// src/store.ts
 import Vue from 'vue';
-import Vuex from 'vuex';
-import axios from 'axios'; // Import Axios here
-import { Pokemon } from '@/types'; // Create this TypeScript type later
+import Vuex, { MutationTree, ActionTree, GetterTree } from 'vuex';
+import axios from 'axios';
+import { Pokemon } from '@/types';
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
-  state: {
-    pokemons: [] as Pokemon[],
-    filteredPokemons: [] as Pokemon[], // Add a new state property to store filtered Pokemons
+interface RootState {
+  pokemons: Pokemon[];
+  filteredPokemons: Pokemon[];
+  selectedType: string | null;
+}
+
+const state: RootState = {
+  pokemons: [],
+  filteredPokemons: [],
+  selectedType: null,
+};
+
+const mutations: MutationTree<RootState> = {
+  setPokemons(state, pokemons: Pokemon[]) {
+    state.pokemons = pokemons;
+    state.filteredPokemons = pokemons;
   },
-  mutations: {
-    setPokemons(state, pokemons: Pokemon[]) {
-        state.pokemons = pokemons;
-        state.filteredPokemons = pokemons; // Initialize filteredPokemons with all Pokemons
-      },
-      setFilteredPokemons(state, pokemons: Pokemon[]) {
-        state.filteredPokemons = pokemons; // Update the filtered Pokemons
-      },  
-      filterPokemons(state, selectedType: string) {
-        if (!selectedType) {
-          state.filteredPokemons = state.pokemons;
-        } else {
-          state.filteredPokemons = state.pokemons.filter(pokemon =>
-            pokemon.types.includes(selectedType)
-          );
-        }
-      },
+  setFilteredPokemons(state, pokemons: Pokemon[]) {
+    state.filteredPokemons = pokemons;
   },
-  actions: {
-    async fetchPokemons({ commit }) {
-      try {
-        // Fetch data from the API using axios
-        const response = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=150');
-        const pokemons: Pokemon[] = response.data.results;
-        commit('setPokemons', pokemons);
-      } catch (error) {
-        console.error('Error fetching Pokemons:', error);
-      }
-    },
-    filterPokemons({ commit, state }, selectedType) {
-        if (!selectedType) {
-          // If no type is selected, return all Pokemons
-          commit('setFilteredPokemons', state.pokemons);
-        } else {
-          // Filter Pokemons based on the selected type
-          const filteredPokemons = state.pokemons.filter((pokemon) =>
-            pokemon.types.includes(selectedType)
-          );
-          commit('setFilteredPokemons', filteredPokemons);
-        }
-      },
+  setSelectedType(state, selectedType: string | null) {
+    state.selectedType = selectedType;
   },
-  getters: {
-    filteredPokemons: (state) => {
-        return state.filteredPokemons;
-      },
+};
+
+const actions: ActionTree<RootState, RootState> = {
+  async fetchPokemons({ commit }) {
+    try {
+      const response = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=150');
+      const pokemonData: { name: string; url: string }[] = response.data.results;
+      const pokemons: Pokemon[] = await Promise.all(
+        pokemonData.map(async (pokemon) => {
+          const res = await axios.get(pokemon.url);
+          return {
+            name: pokemon.name,
+            types: res.data.types.map((type: { type: { name: string } }) => type.type.name),
+            url: pokemon.url,
+            height: res.data.height,
+            weight: res.data.weight,
+            base_experience: res.data.base_experience,
+            sprites: res.data.sprites,
+          };
+        })
+      );
+      commit('setPokemons', pokemons);
+    } catch (error) {
+      console.error('Error fetching Pokemons:', error);
+    }
   },
+  filterPokemons({ commit, state }, selectedType: string | null) {
+    commit('setSelectedType', selectedType);
+    if (!selectedType) {
+      commit('setFilteredPokemons', state.pokemons);
+    } else {
+      const filteredPokemons = state.pokemons.filter((pokemon) =>
+        pokemon.types.includes(selectedType)
+      );
+      commit('setFilteredPokemons', filteredPokemons);
+    }
+  },
+};
+
+const getters: GetterTree<RootState, RootState> = {
+  filteredPokemons: (state) => {
+    return state.filteredPokemons;
+  },
+};
+
+export default new Vuex.Store<RootState>({
+  state,
+  mutations,
+  actions,
+  getters,
 });

@@ -2,10 +2,8 @@ export interface Pokemon {
     name: string;
     url: string;
     types: string[];
-    // generation: string;
     height: number;
     weight: number;
-    // abilities: { ability: { name: string } }[];
     base_experience: number;
     sprites: PokemonSprites;
   }
