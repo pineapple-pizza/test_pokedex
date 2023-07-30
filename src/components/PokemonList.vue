@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <div class="pkmn-container">
     <v-card>
       <v-card-title>
         <v-text-field
@@ -22,6 +22,10 @@
           'disable-items-per-page': true,
         }"
       >
+      <template  v-slot:[`item.base_experience`]="{ item }">
+          <td>{{ item.base_experience }}</td>
+        </template>
+
         <template v-slot:[`item.url`]="{ item }">
           <v-chip
             small
@@ -33,7 +37,7 @@
         </template>
       </v-data-table>
     </v-card>
-  </v-container>
+  </div>
 </template>
 
 <script lang="ts">
@@ -51,6 +55,7 @@ export default {
           text: "Name",
           value: "name",
         },
+        { text: "Base Experience", value: "base_experience" },
         { text: "Info", value: "url", sortable: false },
       ],
     };
@@ -77,3 +82,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.pkmn-container {
+  width: 550px;
+  margin: auto;
+  padding: 10px;
+}
+</style>

@@ -60,9 +60,6 @@ export default defineComponent({
         );
         const data = await response.json();
 
-        const typeString = data.types.map((type: any) => type.type.name);
-
-        console.log(response);
         // Map the received data to match the Pokemon interface
         this.pokemonDetails = {
           name: data.name,
@@ -73,7 +70,6 @@ export default defineComponent({
           types: data.types.map((type: any) => type.type.name),
           sprites: data.sprites,
         };
-        console.log(typeString)
       } catch (error) {
         console.error("Error fetching Pokemon details:", error);
       }
